@@ -1,10 +1,11 @@
 #docstring- Zac Newman- player databse aplication
 #imports
 import sqlite3
+import werkzeug
 
 #constants and variables
 DATABASE = "player.db"
-PASSWORD1 = "pbkdf2:sha256:600000$ZI1UeAvvyxlnqov2$8a8d9f8345109ad68e25766bb4bc7c7f52030e11643e818405bf390b1ee12e60"
+PASSWORD1 = "pbkdf2:sha256:600000$NxC2Y5JSlUOoRPnL$a58ab5f825032205b3487ddd25dcdfb56e194c4c930868cb4560584cf5596bd0"
 
 #functions
 def print_all_data():
@@ -58,6 +59,16 @@ def print_average_speed():
         print(f"{data[0]:<4}{data[1]:<20}{data[2]}{" km/hr":<12}{data[3]}{" km":<10}{data[4]}{" km/hr":<6}")
     #loop finshed here
     db.close()
+
+
+#tell them the password
+print("The password is Player\n")
+password = input("Password: ")
+#check if passwords correct
+werkzeug.security.generate_password_hash(password, method='pbkdf2', salt_length=16)
+if werkzeug.security.check_password_hash(PASSWORD1, password) == False:
+    print("That was incorrect!")
+    exit()
 
 
 while True:
