@@ -1,4 +1,4 @@
-#docstring- Zac Newman- player databse aplication
+#docstring- Zac Newman- player database application
 #imports
 import sqlite3
 import werkzeug
@@ -6,6 +6,8 @@ import werkzeug
 #constants and variables
 DATABASE = "player.db"
 PASSWORD1 = "pbkdf2:sha256:600000$NxC2Y5JSlUOoRPnL$a58ab5f825032205b3487ddd25dcdfb56e194c4c930868cb4560584cf5596bd0"
+attempts = 0
+password = ""
 
 #functions
 def print_all_data():
@@ -63,12 +65,18 @@ def print_average_speed():
 
 #tell them the password
 print("The password is Player\n")
-password = input("Password: ")
-#check if passwords correct
 werkzeug.security.generate_password_hash(password, method='pbkdf2', salt_length=16)
-if werkzeug.security.check_password_hash(PASSWORD1, password) == False:
-    print("That was incorrect!")
-    exit()
+while True:
+    password = input("Password: ")
+    #check if passwords correct
+    if werkzeug.security.check_password_hash(PASSWORD1, password) == False:
+        print("That was incorrect!")
+        attempts += 1
+        if attempts >= 2:
+            exit()
+    else:
+        break
+
 
 
 while True:
@@ -76,9 +84,9 @@ while True:
 """
 What would you like to do?
 1. Print all players data
-2. Print top speed
-3. Print distance
-4. Print average speed
+2. Print by top speed
+3. Print by distance
+4. Print by average speed
 5. Exit
 """
     )
