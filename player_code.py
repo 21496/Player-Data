@@ -10,55 +10,16 @@ attempts = 0
 password = ""
 
 #functions
-def print_all_data():
+def print_player(id):
     db = sqlite3.connect(DATABASE)
     cursor = db.cursor()
-    sql = "SELECT * FROM data;"
-    cursor.execute(sql)
+    sql = "SELECT Players.name, data.top_speed, data.distance, data.average, data.date FROM data JOIN Players ON data.player_id = Players.player_id WHERE data.player_id = ?;"
+    cursor.execute(sql, (id,))
     results = cursor.fetchall()
     #loop through all the results
-    print("ID  Name                Top_Speed     Distance      Average")
+    print("Name                Top Speed     Distance     Avg Speed     Date")
     for data in results:
-        print(f"{data[0]:<4}{data[1]:<20}{data[2]}{" km/hr":<12}{data[3]}{" km":<10}{data[4]}{" km/hr":<6}")
-    #loop finshed here
-    db.close()
-
-def print_top_speed():
-    db = sqlite3.connect(DATABASE)
-    cursor = db.cursor()
-    sql = "SELECT * FROM data ORDER BY top_speed DESC;"
-    cursor.execute(sql)
-    results = cursor.fetchall()
-    #loop through all the results
-    print("ID  Name                Top_Speed     Distance      Average")
-    for data in results:
-        print(f"{data[0]:<4}{data[1]:<20}{data[2]}{" km/hr":<12}{data[3]}{" km":<10}{data[4]}{" km/hr":<6}")
-    #loop finshed here
-    db.close()
-
-def print_total_distance():
-    db = sqlite3.connect(DATABASE)
-    cursor = db.cursor()
-    sql = "SELECT * FROM data ORDER BY distance DESC;"
-    cursor.execute(sql)
-    results = cursor.fetchall()
-    #loop through all the results
-    print("ID  Name                Top_Speed     Distance      Average")
-    for data in results:
-        print(f"{data[0]:<4}{data[1]:<20}{data[2]}{" km/hr":<12}{data[3]}{" km":<10}{data[4]}{" km/hr":<6}")
-    #loop finshed here
-    db.close()
-
-def print_average_speed():
-    db = sqlite3.connect(DATABASE)
-    cursor = db.cursor()
-    sql = "SELECT * FROM data ORDER BY average DESC;"
-    cursor.execute(sql)
-    results = cursor.fetchall()
-    #loop through all the results
-    print("ID  Name                Top_Speed     Distance      Average")
-    for data in results:
-        print(f"{data[0]:<4}{data[1]:<20}{data[2]}{" km/hr":<12}{data[3]}{" km":<10}{data[4]}{" km/hr":<6}")
+        print(f"{data[0]:<20}{data[1]}{" km/hr ":<12}{data[2]}{" km ":<9}{data[3]}{" km/hr ":<11}{data[4]}")
     #loop finshed here
     db.close()
 
@@ -70,9 +31,13 @@ while True:
     password = input("Password: ")
     #check if passwords correct
     if werkzeug.security.check_password_hash(PASSWORD1, password) == False:
-        print("That was incorrect!")
+        #count tried attempts
         attempts += 1
-        if attempts >= 2:
+        if attempts == 1:
+            print("That was incorrect!")
+        if attempts == 2:
+            print("One last attempt!")
+        if attempts >= 3:
             exit()
     else:
         break
@@ -82,23 +47,23 @@ while True:
 while True:
     user_input = input(
 """
-What would you like to do?
-1. Print all players data
-2. Print by top speed
-3. Print by distance
-4. Print by average speed
-5. Exit
+Who's data would you like to see?
+1.  John Smith
+2.  Micheal Brown
+3.  David Johnson
+4.  James Wilson
+5.  William Lee
+6.  Benjamin Wang
+7.  James Newman
+8.  Mathew James
+9.  Ethan Donaldson
+10. Daniel Davis
+11. Exit
 """
     )
-    if user_input == "1":
-        print_all_data()
-    elif user_input == "2":
-        print_top_speed()
-    elif user_input == "3":
-        print_total_distance()
-    elif user_input == "4":
-        print_average_speed()
-    elif user_input == "5":
+    if user_input != "11":
+        print_player(int(user_input))
+    elif user_input == "11":
         break
     else:
         print("That was not an option!\n")
