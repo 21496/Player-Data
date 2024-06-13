@@ -11,6 +11,7 @@ password = ""
 
 #functions
 def print_player(id):
+    """Print the Players Name, Top Speed, Distance, Average Speed and the Date entered"""
     db = sqlite3.connect(DATABASE)
     cursor = db.cursor()
     sql = "SELECT Players.name, data.top_speed, data.distance, data.average, data.date FROM data JOIN Players ON data.player_id = Players.player_id WHERE data.player_id = ?;"
@@ -23,13 +24,26 @@ def print_player(id):
     #loop finshed here
     db.close()
 
+def user():
+    """Print the players ID and Name out for the user to choose from"""
+    db = sqlite3.connect(DATABASE)
+    cursor = db.cursor()
+    sql = "SELECT player_id, name FROM Players"
+    cursor.execute(sql)
+    results = cursor.fetchall()
+    #loop through all the results
+    print("\nWho's data would you like to see?")
+    for data in results:
+        print(f"{data[0]:<3}{data[1]}")
+    #loop finshed here
+    db.close()
 
 #tell them the password
 print("The password is Player\n")
+#generate password and check if the user is correct
 werkzeug.security.generate_password_hash(password, method='pbkdf2', salt_length=16)
 while True:
     password = input("Password: ")
-    #check if passwords correct
     if werkzeug.security.check_password_hash(PASSWORD1, password) == False:
         #count tried attempts
         attempts += 1
@@ -42,28 +56,12 @@ while True:
     else:
         break
 
-
-
 while True:
-    user_input = input(
-"""
-Who's data would you like to see?
-1.  John Smith
-2.  Micheal Brown
-3.  David Johnson
-4.  James Wilson
-5.  William Lee
-6.  Benjamin Wang
-7.  James Newman
-8.  Mathew James
-9.  Ethan Donaldson
-10. Daniel Davis
-11. Exit
-"""
-    )
-    if user_input != "11":
-        print_player(int(user_input))
-    elif user_input == "11":
-        break
-    else:
-        print("That was not an option!\n")
+        user()
+        user_input = int(input(""))
+        if user_input < 11:
+            print_player(int(user_input))
+        elif user_input == 11:
+            break
+        else:
+            print("That was not an option!")
