@@ -14,7 +14,7 @@ def print_player(id):
     """Print the Players Name, Top Speed, Distance, Average Speed and the Date entered"""
     db = sqlite3.connect(DATABASE)
     cursor = db.cursor()
-    sql = "SELECT Players.name, data.top_speed, data.distance, data.average, data.date FROM data JOIN Players ON data.player_id = Players.player_id WHERE data.player_id = ?;"
+    sql = "SELECT Players.name, data.top_speed, data.distance, data.average, data.date FROM data JOIN Players ON data.player_id = Players.player_id WHERE data.player_id = ? ORDER BY SUBSTRING(data.date, 4, 2) DESC;"
     cursor.execute(sql, (id,))
     results = cursor.fetchall()
     #loop through all the results
@@ -34,7 +34,8 @@ def user():
     #loop through all the results
     print("\nWho's data would you like to see?")
     for data in results:
-        print(f"{data[0]:<3}{data[1]}")
+        print(f"{data[0]}{"." :<3}{data[1]}")
+    print("11.  Exit")
     #loop finshed here
     db.close()
 
@@ -57,11 +58,11 @@ while True:
         break
 
 while True:
-        user()
-        user_input = int(input(""))
-        if user_input < 11:
-            print_player(int(user_input))
-        elif user_input == 11:
-            break
-        else:
-            print("That was not an option!")
+    user()
+    id = int(input(""))
+    if id < 11:
+        print_player(int(id))
+    elif id == 11:
+        break
+    else:
+        print("That was not an option!")
