@@ -17,11 +17,14 @@ def print_player(id):
     sql = "SELECT Players.name, data.top_speed, data.distance, data.average, data.date FROM data JOIN Players ON data.player_id = Players.player_id WHERE data.player_id = ? ORDER BY SUBSTRING(data.date, 4, 2) DESC;"
     cursor.execute(sql, (id,))
     results = cursor.fetchall()
-    #loop through all the results
-    print("Name                Top Speed     Distance     Avg Speed     Date")
-    for data in results:
-        print(f"{data[0]:<20}{data[1]}{" km/hr ":<12}{data[2]}{" km ":<9}{data[3]}{" km/hr ":<11}{data[4]}")
-    #loop finshed here
+    if len(results) > 0:
+        #loop through all the results
+        print("Name                Top Speed     Distance     Avg Speed     Date")
+        for data in results:
+            print(f"{data[0]:<20}{data[1]}{" km/hr ":<12}{data[2]}{" km ":<9}{data[3]}{" km/hr ":<11}{data[4]}")
+        #loop finshed here
+    else:
+        print("No results found")
     db.close()
 
 def user():
@@ -35,7 +38,6 @@ def user():
     print("\nWho's data would you like to see?")
     for data in results:
         print(f"{data[0]}{"." :<3}{data[1]}")
-    print("11.  Exit")
     #loop finshed here
     db.close()
 
@@ -59,10 +61,10 @@ while True:
 
 while True:
     user()
-    id = int(input(""))
-    if id < 11:
-        print_player(int(id))
-    elif id == 11:
+    id = input("")
+    if id == "x":
         break
     else:
-        print("That was not an option!")
+        print_player(id)
+    # else:
+    #     print("That was not an option!")
