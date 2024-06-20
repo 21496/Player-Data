@@ -11,7 +11,7 @@ password = ""
 
 #dictionary
 menu_options = {
-    1: "SUBSTRING(data.date, 7, 2), SUBSTRING(data.date, 4, 2), SUBSTRING(data.date, 1, 2)",
+    1: "SUBSTRING(data.date, 4, 2)",
     2: "top_speed", 
     3: "distance", 
     4: "average"
