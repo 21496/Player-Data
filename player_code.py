@@ -9,7 +9,23 @@ PASSWORD1 = "pbkdf2:sha256:600000$NxC2Y5JSlUOoRPnL$a58ab5f825032205b3487ddd25dcd
 attempts = 0
 password = ""
 
+#dictionary
+menu_options = {
+    1: "SUBSTRING(data.date, 7, 2), SUBSTRING(data.date, 4, 2), SUBSTRING(data.date, 1, 2)",
+    2: "top_speed", 
+    3: "distance", 
+    4: "average"
+}
+
 #functions
+def menu():
+    """Start menu, to ask what the user would like to do"""
+    print("""
+What would you like to do?
+1. Print all data
+2. Choose a player
+Press x to Exit""")
+
 def print_player(id):
     """Print the Players Name, Top Speed, Distance, Average Speed and the Date entered"""
     db = sqlite3.connect(DATABASE)
@@ -27,7 +43,21 @@ def print_player(id):
         print("No results found")
     db.close()
 
-def user():
+def print_all(order_column):
+    """Print all of the data in the table"""
+    db = sqlite3.connect(DATABASE)
+    cursor = db.cursor()
+    sql = f"SELECT name, top_speed, distance, average, date FROM data JOIN Players ON data.player_id = Players.player_id ORDER BY {order_column} DESC;"
+    cursor.execute(sql)
+    results = cursor.fetchall()
+    #loop through all the results
+    print("Name                Top Speed     Distance     Avg Speed     Date")
+    for data in results:
+        print(f"{data[0]:<20}{data[1]}{" km/hr ":<12}{data[2]}{" km ":<9}{data[3]}{" km/hr ":<11}{data[4]}")
+    #loop finshed here
+    db.close()
+
+def user_list():
     """Print the players ID and Name out for the user to choose from"""
     db = sqlite3.connect(DATABASE)
     cursor = db.cursor()
@@ -60,11 +90,27 @@ while True:
         break
 
 while True:
-    user()
-    id = input("")
-    if id == "x":
+    menu()
+    menu_input = input("")
+    if menu_input == "x":
         break
-    else:
+    elif menu_input == "1":
+        order = int(input("""
+What would you like to order it by?
+1. Date
+2. Top Speed
+3. Distance
+4. Average Speed
+5. Go Back
+"""))
+        order_column = menu_options.get(order)
+        if order in menu_options:
+            print(print_all(order_column))
+        if order == 5:
+            continue
+        else:
+            print("Invalid input")
+    elif menu_input == "2":
+        user_list()
+        id = input("")
         print_player(id)
-    # else:
-    #     print("That was not an option!")
